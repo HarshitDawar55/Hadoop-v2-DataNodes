@@ -1,2 +1,4 @@
 ---
 # handlers file for Hadoop-DataNodes
+- name: Run BashRC
+  shell: "source {{  ansible_env.HOME  }}/.bashrc"
