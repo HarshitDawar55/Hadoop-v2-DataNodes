@@ -1,6 +1,7 @@
 ---
 # vars file for Hadoop-DataNodes
 hadoop_dir: "/etc/hadoop"
+softwares: "/etc/softwares"
 jdk: "jdk.rpm"
 DataNode_Dir: "/DataNode"
 NameNode_IP: 192.168.1.150
