@@ -114,14 +114,14 @@
     regexp: 'export HADOOP_CONF_DIR=\${HADOOP_CONF_DIR\:\-\"/etc/hadoop\"}'
     replace: export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop/hadoop-2.10.1/etc/hadoop"}
 
-- name: Configuring NameNode IP!
+- name: Configuring DataNode IP!
   blockinfile:
     path: "{{  hadoop_dir  }}/hadoop-2.10.1/etc/hadoop/core-site.xml"
     insertafter: "<configuration>"
     block: |
       <property>
       <name>fs.defaultFS</name>
-      <value>hdfs://{{ ansible_facts['default_ipv4']['address']  }}:{{ NameNode_Port }}</value>
+      <value>hdfs://{{ NameNode_IP  }}:{{ NameNode_Port }}</value>
       </property>
 
       <property>
@@ -136,22 +136,17 @@
 
 - name: Creating the Hadoop Metadata Directory!
   file:
-    path: "{{ NameNode_Dir }}"
+    path: "{{ DataNode_Dir }}"
     state: directory
 
-- name: Configuring NameNode MetaData Directory in hdfs-site.xml!
+- name: Configuring DataNode MetaData Directory in hdfs-site.xml!
   blockinfile:
     path: "{{  hadoop_dir  }}/hadoop-2.10.1/etc/hadoop/hdfs-site.xml"
     insertafter: "<configuration>"
     block: |
       <property>
-      <name>dfs.replication</name>
-      <value>{{ Replication_Factor }}</value>
-      </property>
-
-      <property>
-      <name>dfs.name.dir</name>
-      <value>file://{{ NameNode_Dir }}</value>
+      <name>dfs.data.dir</name>
+      <value>file://{{ DataNode_Dir }}</value>
       </property>
 
 - name: Checking whether the normal mapred-site.xml file exists!
@@ -183,30 +178,18 @@
       <value>mapreduce_shuffle</value>
       </property>
 
-- name: Formatting the NameNode!
-  when: NameNode_Format == "yes"
-  command: hadoop namenode -format -force
-
-- name: Editing Firewall Rules for NameNode!
+- name: Editing Firewall Rules for DataNode!
   firewalld:
     port: "{{ item  }}/tcp"
     immediate: yes
     permanent: yes
     state: enabled
-  loop: "{{ NameNodePorts }}"
+  loop: "{{ DataNodePorts }}"
 
-- name: Starting the NameNode!
+- name: Starting the DataNode!
   block:
-    - name: Starting the NameNode!
-      command: hadoop-daemon.sh start namenode
-  rescue:
-    - name: Already Running!
-      command: clear
-
-- name: Starting the Yarn Services!
-  block:
-    - name: Starting the Yarn Services!
-      command: start-yarn.sh
+    - name: Starting the DataNode!
+      command: start-dfs.sh
   rescue:
     - name: Already Running!
       command: clear
