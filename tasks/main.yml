@@ -43,14 +43,14 @@
     dest: "{{ softwares }}/{{  jdk  }}"
 
 - name: Installing the Hotspot Java Software!
+  tags: h
   block:
     - name: Checking Java Installation!
       command: java -version
   rescue:
     - name: Installing Java!
-      yum:
-        name: "{{ softwares }}/{{ jdk }} "
-        state: present
+      shell:
+        "yum localinstall {{ softwares }}/{{ jdk }} -y"
 
 - name: Creating the Hadoop Installation Directory!
   file:
