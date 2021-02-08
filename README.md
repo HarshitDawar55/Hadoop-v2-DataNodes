@@ -1,12 +1,23 @@
-Role Name
+<img src = "https://img.shields.io/badge/version-1.1.1-brightgreen" />
+
+Hadoop-DataNodes
 =========
 
-A brief description of the role goes here.
+* This Ansible Role is used to configure the Hadoop v2 DataNodes!
+* This role will be using the most stable version of Hadoop 2 i.e. Hadoop-2.10.1
+* This role is used to configure Hadoop on **CentOS** based Linux Only.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Hotspot Java Version 8 is required. In this role, specifically java version jdk-8u271-linux-x64.rpm is used. It might be possible that, this version is not available now online.
+* Download any version of oracle/hotspot java version 8, place the file in the "files" folder in the role. In this role, the folder is not present because it was empty, so it was not uploaded. Therefore, first of all create that folder & then place that jdk downloaded in this folder.
+* Remember to download that jdk that ends with **linux-x64.rpm**.
+* The group name of the systems that has to be configured for Data Node should be **"DataNodes"** in the Inventory File (not required, if running this role on the localhost, in the case of running this role on the localhost, "localhost" keyword must be used while mentioning the hosts in the ansible-playbook).
+
+**Very Important Changes in the code that needs to be done by the user!**
+* Whichever java you download, make sure to replace the name mentioned in the line number 42 of this code by the java package name you have downloaded.
+* Also, replace the exact version of the java version mentioned on line number 103 in the code by the exact version you have downloaded. For example, in the code, in line number 103, it is been written as "jdk1.8.0_271", now, if you have downloaded the package "jdk1.8.0_281-linux-x64.rpm", then replace the java version on line number 103 by "jdk1.8.0_281".
 
 Role Variables
 --------------
@@ -16,23 +27,34 @@ A description of the settable variables for this role should go here, including 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+* Linux DVD Image should be attached to the VirtualBox(specifically in case of using this role to configure in VirtualBox)!
+* If not using this role in Virtual Machine, then make sure that the Linux dvd Image is available at the location **"/dev/cdrom** or **"/dev/sr0""**, if not, then update the path in the line number 11 of the main tasks file.
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
+    - hosts: DataNodes
       roles:
-         - { role: username.rolename, x: 42 }
+         - Hadoop-MasterNode
 
 License
 -------
 
-BSD
+[MIT](https://github.com/HarshitDawar55/Hadoop-v2-DataNodes/blob/main/LICENSE)
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Developed by Harshit Dawar, also known as Technologist, a public speaker, extrovert, & optimist.
+
+**LinkedIn:** https://www.linkedin.com/in/harshitdawar
+
+**PortFolio:** https://harshitdawar55.github.io
+
+**Twitter:** https://www.twitter.com/harshitdawar55
+
+**Medium:** https://harshitdawar.medium.com
+
+**GitHub:** https://www.github.com/harshitdawar55
