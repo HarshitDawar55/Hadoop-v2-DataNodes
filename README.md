@@ -17,18 +17,30 @@ Requirements
 
 **Very Important Changes in the code that needs to be done by the user!**
 * Whichever java you download, make sure to replace the name mentioned in the line number 42 of this code by the java package name you have downloaded.
-* Also, replace the exact version of the java version mentioned on line number 103 in the code by the exact version you have downloaded. For example, in the code, in line number 103, it is been written as "jdk1.8.0_271", now, if you have downloaded the package "jdk1.8.0_281-linux-x64.rpm", then replace the java version on line number 103 by "jdk1.8.0_281".
+* Also, replace the exact version of the java version mentioned on line number 103 in the code by the exact version you have downloaded. For example, in the code, in line number 108, it is been written as "jdk1.8.0_271", now, if you have downloaded the package "jdk1.8.0_281-linux-x64.rpm", then replace the java version on line number 103 by "jdk1.8.0_281".
 
 Role Variables
 --------------
+**softwares** => This is the directory where the JDK will be copied.
+<br />
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+**NameNode_Port** => Port on which the NameNode will be running.
+<br />
+
+**hadoop_dir** => Directory where the Hadoop package will be extracted.
+<br />
+
+**DataNode_Dir** => This is the Directory where the DataNode data will be kept!
+<br />
+
+**MameNode_IP** => Here, the IP of the NameNode has to be assigned to which the DataNodes will connect.
 
 Dependencies
 ------------
 
 * Linux DVD Image should be attached to the VirtualBox(specifically in case of using this role to configure in VirtualBox)!
 * If not using this role in Virtual Machine, then make sure that the Linux dvd Image is available at the location **"/dev/cdrom** or **"/dev/sr0""**, if not, then update the path in the line number 11 of the main tasks file.
+* Required one NameNode to be running, & its IP address has to be assigned to the "NameNode_IP" variable.
 
 Example Playbook
 ----------------
