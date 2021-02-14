@@ -3,14 +3,27 @@
 hadoop_dir: "/etc/hadoop"
 softwares: "/etc/softwares"
 jdk: "jdk.rpm"
+NameNode_Dir: "/NameNode"
 DataNode_Dir: "/DataNode"
-NameNode_IP: 192.168.1.150
+NameNode_IP: "{{  groups['MasterNode'][0]  }}"
 NameNode_Port: 9000
+Replication_Factor: 1
+DataNode_IP:
+  - 192.168.99.111
 DataNodePorts:
   - 50075
   - 50475
   - 50010
   - 50020
+NameNodePorts:
+  - 50070
+  - 50470
+  - 8020
+  - 9000
+  - 50090
+  - 8025
+  - 8030
+  - 8040
 UtilitySoftwares:
   - tar
   - vim
