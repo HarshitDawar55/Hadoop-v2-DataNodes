@@ -32,6 +32,21 @@
     state: present
   loop: "{{ UtilitySoftwares  }}"
 
+- name: Adding MasterNode HostNames in the /etc/hosts file!
+  lineinfile:
+    path: /etc/hosts
+    line: "{{NameNode_IP}} Master"
+    state: present
+
+- name: Adding DataNode HostNames in the /etc/hosts file!
+  lineinfile:
+    path: "/etc/hosts"
+    line: "{{ item }} DataNode{{ index + 1}}"
+    state: present
+  loop: "{{ DataNode_IP }}"
+  loop_control:
+    index_var: index
+
 - name: Creating the directory for Java software!
   file:
     path: "{{  softwares  }}"
@@ -43,14 +58,15 @@
     dest: "{{ softwares }}/{{  jdk  }}"
 
 - name: Installing the Hotspot Java Software!
-  tags: h
   block:
     - name: Checking Java Installation!
       command: java -version
   rescue:
     - name: Installing Java!
-      shell:
-        "yum localinstall {{ softwares }}/{{ jdk }} -y"
+      yum:
+        name: "{{ softwares }}/{{ jdk }} "
+        state: present
+        disable_gpg_check: yes
 
 - name: Creating the Hadoop Installation Directory!
   file:
@@ -121,7 +137,7 @@
     block: |
       <property>
       <name>fs.defaultFS</name>
-      <value>hdfs://{{ NameNode_IP  }}:{{ NameNode_Port }}</value>
+      <value>hdfs://Master:{{ NameNode_Port }}</value>
       </property>
 
       <property>
@@ -136,6 +152,11 @@
 
 - name: Creating the Hadoop Metadata Directory!
   file:
+    path: "{{ NameNode_Dir }}"
+    state: directory
+
+- name: Creating the Hadoop Metadata Directory!
+  file:
     path: "{{ DataNode_Dir }}"
     state: directory
 
@@ -144,6 +165,16 @@
     path: "{{  hadoop_dir  }}/hadoop-2.10.1/etc/hadoop/hdfs-site.xml"
     insertafter: "<configuration>"
     block: |
+      <property>
+      <name>dfs.replication</name>
+      <value>{{ Replication_Factor }}</value>
+      </property>
+
+      <property>
+      <name>dfs.name.dir</name>
+      <value>file://{{ NameNode_Dir }}</value>
+      </property>
+
       <property>
       <name>dfs.data.dir</name>
       <value>file://{{ DataNode_Dir }}</value>
@@ -178,6 +209,42 @@
       <value>mapreduce_shuffle</value>
       </property>
 
+       <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        </property>
+
+        <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>master:8025</value>
+        </property>
+
+        <property>
+        <name>yarn.resourcemanager.scheduler.address</name>
+        <value>master:8030</value>
+        </property>
+
+        <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>master:8040</value>
+        </property>
+
+- name: Editing the Slaves file!
+  lineinfile:
+    path: "{{ hadoop_dir }}/hadoop-2.10.1/etc/hadoop/slaves"
+    line: "DataNode{{ index + 1}}"
+    state: present
+    create: yes
+  loop: "{{ DataNode_IP }}"
+  loop_control:
+    index_var: index
+
+- name: Editing the Slaves file!
+  lineinfile:
+    path: "{{ hadoop_dir }}/hadoop-2.10.1/etc/hadoop/slaves"
+    line: "localhost"
+    state: absent
+
 - name: Editing Firewall Rules for DataNode!
   firewalld:
     port: "{{ item  }}/tcp"
@@ -186,10 +253,3 @@
     state: enabled
   loop: "{{ DataNodePorts }}"
 
-- name: Starting the DataNode!
-  block:
-    - name: Starting the DataNode!
-      command: start-dfs.sh
-  rescue:
-    - name: Already Running!
-      command: clear
