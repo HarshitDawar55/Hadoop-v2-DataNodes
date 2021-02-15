@@ -49,8 +49,12 @@ Dependencies
 ------------
 
 * Linux DVD Image should be attached to the VirtualBox(specifically in case of using this role to configure in VirtualBox)!
+
 * If not using this role in Virtual Machine, then make sure that the Linux dvd Image is available at the location **"/dev/cdrom** or **"/dev/sr0""**, if not, then update the path in the line number 11 of the main tasks file.
+
 * Required one NameNode to be running, & its IP address has to be assigned to the "NameNode_IP" variable.
+
+* **Passworless setup must be done between all the Master & the DataNodes!** 
 
 Example Playbook
 ----------------
