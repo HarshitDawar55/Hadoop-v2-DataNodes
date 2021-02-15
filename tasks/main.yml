@@ -35,7 +35,7 @@
 - name: Adding MasterNode HostNames in the /etc/hosts file!
   lineinfile:
     path: /etc/hosts
-    line: "{{NameNode_IP}} Master"
+    line: "{{ NameNode_IP }} Master"
     state: present
 
 - name: Adding DataNode HostNames in the /etc/hosts file!
@@ -252,4 +252,3 @@
     permanent: yes
     state: enabled
   loop: "{{ DataNodePorts }}"
-
