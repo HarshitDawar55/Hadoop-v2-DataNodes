@@ -54,7 +54,7 @@ Dependencies
 
 * Required one NameNode to be running, & its IP address has to be assigned to the "NameNode_IP" variable.
 
-* **Passworless setup must be done between all the Master & the DataNodes!** 
+* **Passwordless setup must be done between all the Master & the DataNodes!** 
 
 Example Playbook
 ----------------
