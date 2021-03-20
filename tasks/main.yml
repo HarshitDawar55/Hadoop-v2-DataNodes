@@ -152,11 +152,6 @@
 
 - name: Creating the Hadoop Metadata Directory!
   file:
-    path: "{{ NameNode_Dir }}"
-    state: directory
-
-- name: Creating the Hadoop Metadata Directory!
-  file:
     path: "{{ DataNode_Dir }}"
     state: directory
 
@@ -168,11 +163,6 @@
       <property>
       <name>dfs.replication</name>
       <value>{{ Replication_Factor }}</value>
-      </property>
-
-      <property>
-      <name>dfs.name.dir</name>
-      <value>file://{{ NameNode_Dir }}</value>
       </property>
 
       <property>
