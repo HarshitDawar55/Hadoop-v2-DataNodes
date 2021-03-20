@@ -3,7 +3,6 @@
 hadoop_dir: "/etc/hadoop"
 softwares: "/etc/softwares"
 jdk: "jdk.rpm"
-NameNode_Dir: "/NameNode"
 DataNode_Dir: "/DataNode"
 NameNode_IP: "{{  groups['MasterNode'][0]  }}"
 NameNode_Port: 9000
